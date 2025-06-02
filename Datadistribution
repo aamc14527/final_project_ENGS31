@@ -66,6 +66,8 @@ begin
             when Svelo_in =>
             	velo_en <= '1';
             	ns <= Idle; 
+	when others => 
+		ns <= idle; 
         end case;
 end process; 
 
@@ -79,9 +81,9 @@ begin
     if tone_en = '1' then 
     	tone_reg <= tone_out;
     end if; 
-    if velo_en = '1' then 
-    	velo_reg <= velo_out; 
-    end if;
+    -- if velo_en = '1' then 
+    	-- velo_reg <= velo_out; 
+    -- end if;
 end process; 
  end behavior;                    
                  
