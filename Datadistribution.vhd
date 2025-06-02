@@ -75,7 +75,7 @@ end process state_update;
         end case;
 end process; 
 
-register_proc process : (clk) 
+register_proc : process(clk) 
 begin
 
 	if pow_en = '1' then 
