@@ -43,9 +43,7 @@ begin
     
 	NextStateLogic: process(cs,power_byte_ready,tone_byte_ready,velo_byte_ready)
 	begin
-    	power_byte_ready <= '0';
-        tone_byte_ready <= '0';
-        velo_byte_ready <= '0';
+    	
     	
         ns <= cs;
         
