@@ -43,7 +43,7 @@ begin
 	if rising_edge(clk) then 
 		cs <= ns;
 	end if;
-end process State_Update;
+end process state_update;
     
 	NextStateLogic: process(cs,power_byte_ready,tone_byte_ready,velo_byte_ready)
 	begin
