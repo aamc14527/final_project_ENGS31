@@ -1,4 +1,3 @@
--- Code your design here
 library IEEE;
 use IEEE.std_logic_1164.all;
 
@@ -32,9 +31,13 @@ signal power_reg : STD_LOGIC_VECTOR(7 downto 0) := (others => '1');
 signal tone_reg  : STD_LOGIC_VECTOR(7 downto 0) := (others => '1');
 signal velo_reg  : STD_LOGIC_VECTOR(7 downto 0) := (others => '1');
 
-signal tone_count: STD_LOGIC_VECTOR(7 downto 0); 
+signal tone_count: STD_LOGIC_VECTOR(7 downto 0);
+signal tone_step : STD_LOGIC_VECTOR(7 downto 0); 
+
+
 
 begin
+
 state_update : process(clk)
 	if rising_edge(clk) then 
         	cs <= ns;
@@ -84,12 +87,31 @@ begin
     -- if velo_en = '1' then 
     	-- velo_reg <= velo_out; 
     -- end if;
-end process register_proc; 
- end behavior;                    
-                 
+end process register_proc;                  
+
+tone_counter_proc : process (clk) 
+begin 
+
+	if tone_reset = '1' then
+    	tone_count <= (others => '0');
+    elsif tone_en = '1' then 
+    	tone_count <= tone_count + UNSIGNED (tone_step); 
+    end if;
+end process; 
+
+
+    note_value <= STD_LOGIC_VECTOR(tone_reg);
+    status_note <= STD_LOGIC_VECTOR(pow_reg) := (3 downto 0);
+    Midi_chan <= STD_LOGIC_VECTOR(pow_reg) := (7 downto 4); 
+    
+    
+end behavior;     
     
     
     
+
+     
+	
 
      
 	
