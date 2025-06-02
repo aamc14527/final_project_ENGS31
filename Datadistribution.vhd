@@ -11,7 +11,7 @@ port (   Byte_ready : in  STD_LOGIC;
          status_note: out STD_LOGIC_VECTOR (3 downto 0);
          Midi_chan  : out STD_LOGIC_VECTOR (3 downto 0);
          Note_value : out STD_LOGIC_VECTOR (7 downto 0);
-         Note_velo  : out STD_LOGIC_VECTOR (7 downto 0);
+         Note_velo  : out STD_LOGIC_VECTOR (7 downto 0)
       );
          
 end DATA_dist; 
@@ -35,8 +35,8 @@ signal velo_reg  : STD_LOGIC_VECTOR(7 downto 0) := (others => '1');
 signal tone_count: STD_LOGIC_VECTOR(7 downto 0); 
 
 begin
-
-	if rising_edge(clk_port) then 
+state_update : process(clk)
+	if rising_edge(clk) then 
         	cs <= ns;
         end if;
     end process StateUpdate;
