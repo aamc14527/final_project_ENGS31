@@ -39,7 +39,7 @@ state_update : process(clk)
 	if rising_edge(clk) then 
         	cs <= ns;
         end if;
-    end process StateUpdate;
+    end process State_Update;
     
 	NextStateLogic: process(cs,power_byte_ready,tone_byte_ready,velo_byte_ready)
 	begin
@@ -84,7 +84,7 @@ begin
     -- if velo_en = '1' then 
     	-- velo_reg <= velo_out; 
     -- end if;
-end process; 
+end process register_proc; 
  end behavior;                    
                  
     
