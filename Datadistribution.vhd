@@ -39,10 +39,11 @@ signal tone_step : STD_LOGIC_VECTOR(7 downto 0);
 begin
 
 state_update : process(clk)
+begin
 	if rising_edge(clk) then 
-        	cs <= ns;
-        end if;
-    end process State_Update;
+		cs <= ns;
+	end if;
+end process State_Update;
     
 	NextStateLogic: process(cs,power_byte_ready,tone_byte_ready,velo_byte_ready)
 	begin
