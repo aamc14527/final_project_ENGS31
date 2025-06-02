@@ -24,10 +24,6 @@ signal shift_reg 	: std_logic_vector(9 downto 0) := (others => '1'); --in the ex
 signal baud_cnt : unsigned(8 downto 0) := (others => '0'); --9 bits for 320, subject to change
 signal bit_cnt 	: unsigned(3 downto 0) := (others => '0'); --4 bits to represent 10
 
-signal bits_loaded : integer range 0 to 10 := 0;
-
-signal load_first 	: std_logic := '0';
-
 signal baud_tc 	: std_logic 	:= '0';
 signal bit_tc 	: std_logic 	:= '0';
 
@@ -48,13 +44,19 @@ BEGIN
 	
 	case cs is 
 		when sidle =>
-			if data_in = '0' then
-				baud_reset <= '1';
-				load_first <= '1';
+			if data_in = '0' then --first bit ready
 				ns <= sstart;
 			end if;
+		when sstart =>
+			if baud_tc = '1' then --first bit read at midpoint
+				ns <= sread;
+			end if;
 		when sread =>
-			
+			if baud_tc = '1' then 
+				if bit_cnt = 8 then --8 bits received
+					ns <= sstop;
+				end if;
+			end if;
 		when sstop =>
 			if baud_tc = '1' then 
 				data_ready <= '1';
