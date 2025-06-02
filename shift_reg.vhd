@@ -13,33 +13,34 @@ end SCI_Tx;
 ARCHITECTURE behavior of SCI_Tx is
 
 --Datapath elements
-type state_type is (sidle, sstart, sread, sstop);
+type state_type is (sidle, sread, sstop);
 signal cs, ns : state_type := sidle;
 
 
 constant BAUD_PERIOD : integer := 320; --for a 10 MHz clock, the baud period is 320, 10000000/31250
 constant HALF_BAUD 	: integer := BAUD_PERIOD / 2;
-constant NUM_BITS 	: integer := 10; --number of bits being read at a time
 
 signal shift_reg 	: std_logic_vector(9 downto 0) := (others => '1'); --in the example, others are initialized to 1
 signal baud_cnt : unsigned(8 downto 0) := (others => '0'); --9 bits for 320, subject to change
 signal bit_cnt 	: unsigned(3 downto 0) := (others => '0'); --4 bits to represent 10
 
-signal clk_counter : integer range 0 to 320 := 0;
+signal bits_loaded : integer range 0 to 10 := 0;
 
---signal baud_tc 	: std_logic 	:= '0';
---signal bit_tc 	: std_logic 	:= '0';
+signal load_first 	: std_logic := '0';
+
+signal baud_tc 	: std_logic 	:= '0';
+signal bit_tc 	: std_logic 	:= '0';
 
 BEGIN
 
 stateUpdate : process(clk)
 BEGIN
 	if rising_edge(clk) then 
-		current_state <= next_state;
+		cs <= ns;
 	end if;
 end process stateUpdate;
 
-nextStateLogic : process(cs, data_in) 
+nextStateLogic : process(cs, data_in, baud_tc, bit_cnt) 
 BEGIN
 	--defaults go here
 	ns <= cs;
@@ -47,44 +48,52 @@ BEGIN
 	
 	case cs is 
 		when sidle =>
-			if data_in = '0' then 
-				clk_counter <= HALF_BAUD;
+			if data_in = '0' then
+				baud_reset <= '1';
+				load_first <= '1';
 				ns <= sstart;
 			end if;
-		when sstart =>
-			if clk_counter = 0 then 
-				bit_cnt <= (others => '0');
-				shift_reg <= data_in & shift_reg(9 downto 1); --right shifting into the register
-				clk_counter <= BAUD_PERIOD;
-				ns <= sread;
-			else 
-				clk_counter <= clk_counter - 1; --decrementing the counter
-			end if;
 		when sread =>
-			if clk_counter = 0 then 
-				bit_cnt <=  bit_cnt + 1;
-				shift_reg <= data_in & shift_reg(9 downto 1);
-				clk_counter <= BAUD_PERIOD;
-				
-				if bit_cnt = 8 then 
-					ns <= sstop;
-				end if;
-			else 
-				clk_counter <= clk_counter - 1;
-			end if;
+			
 		when sstop =>
-			if clk_counter = 0 then 
-				byte_out <= shift_reg(8 downto 1);
+			if baud_tc = '1' then 
 				data_ready <= '1';
 				ns <= sidle;
-			else 
-				clk_counter <= clk_counter - 1;
 			end if;
 		when others => 
 			ns <= sidle;
 		end case;
 end process nextStateLogic;
 
+baudRateClock : process(clk) 
+BEGIN
+	if cs = sidle and data_in = '0' then --starts the baud counter
+		baud_cnt <= to_unsigned(HALF_BAUD-1, 9); --setting the baud cnt to HALF_BAUD
+		baud_tc <= '0';
+	elsif baud_cnt = 0 then 
+		baud_cnt <= to_unsigned(BAUD_PERIOD-1, 9); --non midpoint
+		baud_tc <= '1'
+	else 
+		baud_cnt <= baud_cnt - 1;
+		baud_tc <= '0';
+	end if;
+end process baudRateClock;
+		
+receiver : process(clk) 
+BEGIN
+	if cs = sread and baud_tc = '1' then 
+		shift_reg <= data_in & shift_reg(9 downto 1);
+		bit_cnt <= bit_cnt + 1;
+	elsif cs = sidle then --back to default params
+		shift_reg <= (others => '1');
+		bit_cnt <= (others => '0');
+	end if;
+	
+	if cs = sstop and baud_tc = '1' then 
+		byte_out <= shift_reg(8 downto 1); --remove the start and stop bits from the output
+	end if;
+end process receiver;
 
+byte_ready <= data_ready;
 end behavior;
            
