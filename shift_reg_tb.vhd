@@ -57,11 +57,13 @@ begin
     -- Stimulus process
     stim_proc: process
         begin
-        
             -- Start bit
-            data_in <= '0';
+            data_in <= '1';
             wait for 6*BAUD_PERIOD;
-
+			
+            data_in <= '0';
+            wait for BAUD_PERIOD;
+            
             -- Data bits (LSB first)
             for i in 0 to 7 loop
                 data_in <= byte(i);
@@ -70,16 +72,21 @@ begin
 
             -- Stop bit
             data_in <= '1';
-            wait for 6.5*BAUD_PERIOD;
-            
+            wait for 6.5*BAUD_PERIOD; --checking ability to measure in the middle
+
             data_in <= '0';
-            wait for 6*BAUD_PERIOD;
+            wait for BAUD_PERIOD;            
+
+            byte <= "00000111";
+
 
             -- Data bits (LSB first)
             for i in 0 to 7 loop
                 data_in <= byte(i);
                 wait for BAUD_PERIOD;
             end loop;
+            
+            data_in <= '1';
             
             wait;
         end process;
