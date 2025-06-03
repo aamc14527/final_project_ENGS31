@@ -8,7 +8,7 @@ entity spi_dac_driver is
         clk         : in  std_logic;               -- System clock
         reset       : in  std_logic;
         start       : in  std_logic;               -- Trigger to send data
-        digital_in  : in  std_logic_vector(7 downto 0); -- 8-bit data
+        digital_in  : in  std_logic_vector(11 downto 0); -- 8-bit data
 
         sclk        : out std_logic;
         mosi        : out std_logic;
@@ -21,7 +21,7 @@ architecture Behavioral of spi_dac_driver is
     type state_type is (IDLE, LOAD, SHIFT, FINISH);
     signal state : state_type := IDLE;
 
-    signal shift_reg : std_logic_vector(7 downto 0);
+    signal shift_reg : std_logic_vector(11 downto 0);
     signal bit_cnt   : integer range 0 to 7 := 0;
 
     signal sclk_int  : std_logic := '0';
@@ -96,6 +96,3 @@ begin
     end process;
 
 end Behavioral;
-
-
-	
