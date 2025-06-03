@@ -88,17 +88,17 @@ end process baudRateClock;
 receiver : process(clk) 
 BEGIN
 	if rising_edge(clk) then 
-    	if cs = sread and baud_tc = '1' then 
-        	shift_reg <= data_in & shift_reg(9 downto 1);
-          	bit_cnt <= bit_cnt + 1;
-      	elsif cs = sidle then --back to default params
-         	shift_reg <= (others => '1');
-         	bit_cnt <= (others => '0');
-      	end if;
-
-      	if cs = sstop and baud_tc = '1' then 
-          	byte_out <= shift_reg(8 downto 1); --remove the start and stop bits from the output
-      	end if;
+	    	if cs = sread and baud_tc = '1' then 
+	        	shift_reg <= data_in & shift_reg(9 downto 1);
+	          	bit_cnt <= bit_cnt + 1;
+	      	elsif cs = sidle then --back to default params
+	         	shift_reg <= (others => '1');
+	         	bit_cnt <= (others => '0');
+	      	end if;
+	
+	      	if cs = sstop and baud_tc = '1' then 
+	          	byte_out <= shift_reg(8 downto 1); --remove the start and stop bits from the output
+	      	end if;
  	end if;
 end process receiver;
 
