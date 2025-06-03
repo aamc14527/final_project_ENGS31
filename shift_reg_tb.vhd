@@ -8,7 +8,6 @@ end SCI_Tx_tb;
 
 architecture behavior of SCI_Tx_tb is
 
-    -- Component declaration for SCI_Tx
     component SCI_Tx
         port(
             clk       : in  std_logic;
