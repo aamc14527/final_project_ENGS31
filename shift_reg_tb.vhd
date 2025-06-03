@@ -34,7 +34,6 @@ architecture behavior of SCI_Tx_tb is
 
 begin
 
-    -- Instantiate the Unit Under Test (UUT)
     uut: SCI_Tx
         port map (
             clk        => clk,
@@ -43,7 +42,6 @@ begin
             byte_ready => byte_ready
         );
 
-    -- Clock generation
     clk_process :process
     begin
         while true loop
@@ -54,7 +52,6 @@ begin
         end loop;
     end process;
 
-    -- Stimulus process
     stim_proc: process
         begin
             -- Start bit
@@ -74,6 +71,7 @@ begin
             data_in <= '1';
             wait for 6.5*BAUD_PERIOD; --checking ability to measure in the middle
 
+	    -- Start bit
             data_in <= '0';
             wait for BAUD_PERIOD;            
 
@@ -85,7 +83,7 @@ begin
                 data_in <= byte(i);
                 wait for BAUD_PERIOD;
             end loop;
-            
+            -- Stop bit
             data_in <= '1';
             
             wait;
