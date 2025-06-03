@@ -15,9 +15,9 @@ inputs: clk (std_logic), data_in (std_logic_vector(7 downto 0)), new_data (std_l
 outputs: midi_chn (std_logic_vector(3 downto 0)), power_on (std_logic_vector(3 downto 0)), tone_out (std_logic_vector(7 downto 0)), vel_out (std_logic_vector(7 downto 0)) <br>
 
 
-### Digital_to_analog_converter 
+### Digital to Analog Converter
 Final step in the datapath. This takes outputs from() and () in order to convert the digital signals to analog 
 
-#### Digital_to_analog_converter
+#### Digital_Analog
 inputs: clk (std_logic), reset (std_logic), start (std_logic) digital_in (std_logic_vector(7 downto 0)) <br>
 outputs: sclk (std_logic) mosi (std_logic), cs (std_logic), done (std_logic) <br> 
