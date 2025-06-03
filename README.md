@@ -15,11 +15,25 @@ inputs: clk (std_logic), data_in (std_logic_vector(7 downto 0)), new_data (std_l
 outputs: midi_chn (std_logic_vector(3 downto 0)), power_on (std_logic_vector(3 downto 0)), tone_out (std_logic_vector(7 downto 0)), vel_out (std_logic_vector(7 downto 0)) <br>
 
 ### DDS
-DDS will take the tone value given by the SCI Processor and pass it to a ROM holding a sine wave to pass the desired pitch to the DAC. The DDS contains three key components: first, a clock divider that determines the sampling rate (of the sine wave from the ROM). This sampling rate is the speed at which an incrementer counts. The incrementer will count by m to N-1. N is equal to the size of the ROM (in bit count) and m is what determines at what interval the counter moves. The output of the counter is sent at the sampling rate to determine when the ROM is read and at what address. The DDS sends out an N bit signal (where N is the size of the ROM output)
+DDS will take the tone value given by the SCI Processor and pass it to a ROM holding a sine wave to pass the desired pitch to the DAC. The DDS contains three key components: first, a clock divider that determines the sampling rate (of the sine wave from the ROM). This sampling rate is the speed at which an incrementer counts. The incrementer will count by m to N-1. N is equal to the size of the ROM (in bit count) and m is what determines at what interval the counter moves. A lookup table is used to covnert tone_sig to m. The output of the counter is sent at the sampling rate to determine when the ROM is read and at what address. The DDS sends out an N bit signal (where N is the size of the ROM output). 
 
 #### DDS_toplevel
 inputs: tone_sig (std_logic(7 downto 0)) <br> 
 outputs: sin_addr (std_logic(N-1 downto 0)) <br>
+
+##### DDS_Clk_Divider
+inputs: fast_clk (std_logic) <br>
+outputs: counter_clk (std_logic) <br>
+constants: clk_divider (integer) <br>
+
+##### m_lookup
+inputs: tone_sig (std_logic_vector(7 downto 0)) <br>
+outputs: m_value (std_logic_vector(7 downto 0)) <br>
+
+##### DDS_Counter
+inputs: counter_clk (std_logic), m_value (std_logic_vector(7 downto 0)) <br> 
+outputs: DDS_ROM_ADDR (std_logic_vector (7 downto 0)) <br>
+constants: N (integer) <br> 
 
 ### Digital to Analog Converter
 Final step in the datapath. This takes outputs from() and () in order to convert the digital signals to analog 
