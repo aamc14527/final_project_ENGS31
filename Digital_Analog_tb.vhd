@@ -14,7 +14,7 @@ architecture behavior of tb_spi_dac_driver is
             clk         : in  std_logic;
             reset       : in  std_logic;
             start       : in  std_logic;
-            digital_in  : in  std_logic_vector(7 downto 0);
+            digital_in  : in  std_logic_vector(11 downto 0);
             sclk        : out std_logic;
             mosi        : out std_logic;
             cs          : out std_logic;
@@ -26,7 +26,7 @@ architecture behavior of tb_spi_dac_driver is
     signal clk         : std_logic := '0';
     signal reset       : std_logic := '0';
     signal start       : std_logic := '0';
-    signal digital_in  : std_logic_vector(7 downto 0) := (others => '0');
+    signal digital_in  : std_logic_vector(11 downto 0) := (others => '0');
     signal sclk        : std_logic;
     signal mosi        : std_logic;
     signal cs          : std_logic;
@@ -69,9 +69,9 @@ begin
 
         -- Wait and apply input
         wait for 20 ns;
-        digital_in <= "10101010";
+        digital_in <= "101010101010";
         start <= '1';
-        wait for clk_period;
+        wait for 4* clk_period;
         start <= '0';
 
         -- Wait for transaction to complete
@@ -79,13 +79,19 @@ begin
 
         -- Insert delay and end
         wait for 100 ns;
-        digital_in <= "11001100";
+        digital_in <= "110011001100";
         start <= '1';
-        wait for clk_period;
+        wait for 3 * clk_period;
         start <= '0';
 
         wait until done = '1';
         wait for 100 ns;
+
+        assert false report "Simulation complete." severity failure;
+    end process;
+
+end behavior;
+
 
         assert false report "Simulation complete." severity failure;
     end process;
