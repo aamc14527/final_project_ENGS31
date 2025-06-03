@@ -6,7 +6,7 @@ use IEEE.std_logic_1164.all;
 ARCHITECTURE behavior of top_shell IS
 
 Entity top_shell is 
-port ( 
+port (	clk_external_port : in std_logic;
 	 ) 
 end top_shell; 
 
