@@ -13,7 +13,7 @@ end SCI_Tx;
 ARCHITECTURE behavior of SCI_Tx is
 
 --Datapath elements
-type state_type is (sidle, sread, sstop);
+type state_type is (sidle, sstart, sread, sstop);
 signal cs, ns : state_type := sidle;
 
 
@@ -23,6 +23,8 @@ constant HALF_BAUD 	: integer := BAUD_PERIOD / 2;
 signal shift_reg 	: std_logic_vector(9 downto 0) := (others => '1'); --in the example, others are initialized to 1
 signal baud_cnt : unsigned(8 downto 0) := (others => '0'); --9 bits for 320, subject to change
 signal bit_cnt 	: unsigned(3 downto 0) := (others => '0'); --4 bits to represent 10
+
+signal data_ready : std_logic := '0';
 
 signal baud_tc 	: std_logic 	:= '0';
 signal bit_tc 	: std_logic 	:= '0';
@@ -69,31 +71,35 @@ end process nextStateLogic;
 
 baudRateClock : process(clk) 
 BEGIN
-	if cs = sidle and data_in = '0' then --starts the baud counter
-		baud_cnt <= to_unsigned(HALF_BAUD-1, 9); --setting the baud cnt to HALF_BAUD
-		baud_tc <= '0';
-	elsif baud_cnt = 0 then 
-		baud_cnt <= to_unsigned(BAUD_PERIOD-1, 9); --non midpoint
-		baud_tc <= '1'
-	else 
-		baud_cnt <= baud_cnt - 1;
-		baud_tc <= '0';
-	end if;
+	if rising_edge(clk) then 
+      if cs = sidle and data_in = '0' then --starts the baud counter
+          baud_cnt <= to_unsigned(HALF_BAUD-1, 9); --setting the baud cnt to HALF_BAUD
+          baud_tc <= '0';
+      elsif baud_cnt = 0 then 
+          baud_cnt <= to_unsigned(BAUD_PERIOD-1, 9); --non midpoint
+          baud_tc <= '1';
+      else 
+          baud_cnt <= baud_cnt - 1;
+          baud_tc <= '0';
+      end if;
+    end if;
 end process baudRateClock;
 		
 receiver : process(clk) 
 BEGIN
-	if cs = sread and baud_tc = '1' then 
-		shift_reg <= data_in & shift_reg(9 downto 1);
-		bit_cnt <= bit_cnt + 1;
-	elsif cs = sidle then --back to default params
-		shift_reg <= (others => '1');
-		bit_cnt <= (others => '0');
-	end if;
-	
-	if cs = sstop and baud_tc = '1' then 
-		byte_out <= shift_reg(8 downto 1); --remove the start and stop bits from the output
-	end if;
+	if rising_edge(clk) then 
+    	if cs = sread and baud_tc = '1' then 
+        	shift_reg <= data_in & shift_reg(9 downto 1);
+          	bit_cnt <= bit_cnt + 1;
+      	elsif cs = sidle then --back to default params
+         	shift_reg <= (others => '1');
+         	bit_cnt <= (others => '0');
+      	end if;
+
+      	if cs = sstop and baud_tc = '1' then 
+          	byte_out <= shift_reg(8 downto 1); --remove the start and stop bits from the output
+      	end if;
+ 	end if;
 end process receiver;
 
 byte_ready <= data_ready;
