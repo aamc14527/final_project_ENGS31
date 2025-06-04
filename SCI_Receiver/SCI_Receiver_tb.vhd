@@ -3,12 +3,12 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
-entity SCI_Tx_tb is
-end SCI_Tx_tb;
+entity SCI_Receiver_tb is
+end SCI_Receiver_tb;
 
-architecture behavior of SCI_Tx_tb is
+architecture behavior of SCI_Receiver_tb is
 
-    component SCI_Tx
+    component SCI_Receiver
         port(
             clk       : in  std_logic;
             data_in   : in  std_logic;
@@ -33,7 +33,7 @@ architecture behavior of SCI_Tx_tb is
 
 begin
 
-    uut: SCI_Tx
+    uut: SCI_Receiver
         port map (
             clk        => clk,
             data_in    => data_in,
