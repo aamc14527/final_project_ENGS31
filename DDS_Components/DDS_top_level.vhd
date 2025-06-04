@@ -58,7 +58,7 @@ end component DDS_Clk_Divider;
 
 component DDS_Counter is
     Port (  counter_clk : in std_logic;
-            tone_sig    : in std_logic_vector(7 downto 0);
+            m_value    : in std_logic_vector(7 downto 0);
             DDS_ROM_ADDR: out std_logic_vector(11 downto 0)
     );
 end component DDS_Counter;
@@ -89,7 +89,7 @@ DDS_CLK : DDS_Clk_Divider PORT MAP(
 
 Counter : DDS_Counter PORT MAP(
     counter_clk => slow_clk,
-    tone_sig => m,
+    m_value => m,
     DDS_rom_addr => ADDR
 );
 end Behavioral;
