@@ -41,3 +41,10 @@ Final step in the datapath. This takes outputs from() and () in order to convert
 #### Digital_Analog
 inputs: clk (std_logic), reset (std_logic), start (std_logic) digital_in (std_logic_vector(7 downto 0)) <br>
 outputs: sclk (std_logic) mosi (std_logic), cs (std_logic), done (std_logic) <br> 
+
+### SPI Transmitter
+Takes 12 bit parallel input and sends the output serially across 12 bits incremented by the sclk, which is outputted alongside the serial data so that the data can be read based on transmission timing.
+
+#### SPI_Transmitter
+inputs: clk (std_logic), Parallel_in (std_logic_vector(11 downto 0)), New_data (std_logic) (will be replaced), MISO (std_logic) <br>
+outputs: MOSI (std_logic), SCLK (std_logic), CS (std_logic), Tx_done (std_logic) <br>
