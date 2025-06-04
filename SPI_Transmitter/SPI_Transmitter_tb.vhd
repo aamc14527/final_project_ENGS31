@@ -32,7 +32,7 @@ signal SCLK			: std_logic;
 signal CS 			: std_logic;
 signal Tx_done 		: std_logic;
 
-constant clk_period : time := 10 ns; --10 MHz clock
+constant clk_period : time := 10 ns; --100 MHz clock
 
 begin
 
