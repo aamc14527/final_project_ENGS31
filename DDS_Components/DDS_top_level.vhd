@@ -68,7 +68,7 @@ end component DDS_Counter;
 --==============================================================
 signal ADDR : std_logic_vector (11 downto 0); --for the address from counter
 signal slow_clk : std_logic; --for counter clk
-signal m : std_logic_vector(4 downto 1); --m value determined by note signal`
+signal m : std_logic_vector(7 downto 0); --m value determined by note signal`
 
 begin
 --==============================================================
@@ -76,9 +76,9 @@ begin
 --==============================================================
 DDS_ROM : dds_compiler_0 PORT MAP(
     aclk => slow_clk,
-    --s_axis_phase_tvalid => s_axis_phase_tvalid, dont think this is needed
+    s_axis_phase_tvalid => '1', --dont think this is needed
     s_axis_phase_tdata => "0000" & ADDR,--seems weird, ask Tad
-    --m_axis_data_tvalid => m_axis_data_tvalid, same here
+    m_axis_data_tvalid => open,
     m_axis_data_tdata => sin_sig
 );
 
