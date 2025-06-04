@@ -1,4 +1,3 @@
-
 ----------------------------------------------------------------------------------
 -- Company: 
 -- Engineer: Asa Chard
@@ -33,8 +32,8 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity m_lookup is
-Port (  tone_sig : in std_logic_vector(7 downto 0);
-        m_value : out std_logic_vector(7 downto 0)
+Port (  tone : in std_logic_vector(7 downto 0);
+        m_val : out std_logic_vector(7 downto 0)
  );
 end m_lookup;
 
@@ -42,12 +41,14 @@ architecture Behavioral of m_lookup is
 
 begin
 
-find_m_val : process(tone_Sig)
+find_m_val : process(tone)
 begin
-    case tone_sig is
-        when x"30" =>
+    case tone is
+        	when x"01" =>
+           	 	m_val <= "00000001";
+       	 	when x"30" =>
 			m_val <= "00100010";
-        when x"31" =>
+        	when x"31" =>
 			m_val <= "00100100";
 		when x"32" =>
 			m_val <= "00100110";
@@ -57,47 +58,45 @@ begin
 			m_val <= "00101010";
 		when x"35" =>
 			m_val <= "00101101";
-		when x"36"
+		when x"36" =>
 			m_val <= "00101111";
-		when x"37"
+		when x"37" =>
 			m_val <= "00110010";
-		when x"38"
+		when x"38" =>
 			m_val <= "00110101";
-		when x"39"
+		when x"39" =>
 			m_val <= "00111000";
-		when x"3A"
+		when x"3A" =>
 			m_val <= "00111100";
-		when x"3B"
+		when x"3B" =>
 			m_val <= "00111111";
-		when x"3C"
+		when x"3C" =>
 			m_val <= "01000011";
-		when x"3D"
+		when x"3D" =>
 			m_val <= "01000111";
-		when x"3E"
+		when x"3E" =>
 			m_val <= "01001011";
-		when x"3F"
+		when x"3F" =>
 			m_val <= "01010000";
-		when x"40"
+		when x"40" =>
 			m_val <= "01010101";
-		when x"41"
+		when x"41" =>
 			m_val <= "01011010";
-		when x"42"
+		when x"42" =>
 			m_val <= "01011111";
-		when x"43"
+		when x"43" =>
 			m_val <= "01100101";
-		when x"44"
+		when x"44" =>
 			m_val <= "01101010";
-		when x"45"
+		when x"45" =>
 			m_val <= "01110001";
-		when x"46"
+		when x"46" =>
 			m_val <= "01111000";
-		when x"47"
+		when x"47" =>
 			m_val <= "01111111";
-		when x"48"
+		when x"48" =>
 			m_val <= "10000110";
 		when others =>
-			null;
+			m_val <= "00000000";
     end case;
 end process;
-
-end Behavioral;
