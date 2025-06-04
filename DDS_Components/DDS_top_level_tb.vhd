@@ -10,18 +10,19 @@ architecture behavior of DDS_toplevel_tb is
 component DDS_TopLevel 
   port ( clk      : in std_logic;
        tone_sig : in std_logic_vector(7 downto 0);
-       sin_sig  : out std_logic_vector(15 downto 0)
+       sin_sig  : out std_logic_vector(11 downto 0)
 );
 end component;
-  signal   clk      : in std_logic;
-  signal   tone_sig : in std_logic_vector(7 downto 0);
-  signal   sin_sig  : out std_logic_vector(15 downto 0);
+  signal   clk      : std_logic;
+  signal   tone_sig : std_logic_vector(7 downto 0);
+  signal   sin_sig  : std_logic_vector(11 downto 0);
 
-  constant clk_period : time := 100 ns; --10 MHz clock
+  constant clk_period : time := 10 ns; --10 MHz clock
+  constant slow_clk_period : time := 62.5 us; --16 kHz clock
 
 begin 
 
-uut: DDS_TopLevel portmap (
+uut: DDS_TopLevel port map (
   clk      => clk,
   tone_sig => tone_sig,
   sin_sig  => sin_sig 
@@ -40,18 +41,22 @@ begin
     wait for 20ns;
 
     tone_sig <= x"45"; 
-    wait for 2 * clk_period;
+    wait for 10000 * slow_clk_period;
 
     tone_sig <= x"3C"; 
-    wait for 2 * clk_period;
+    wait for 10000 * slow_clk_period;
 
     tone_sig <= x"32"; 
-    wait for 2 * clk_period;
+    wait for 10000 * slow_clk_period;
 
     tone_sig <= x"47"; 
-    wait for 2 * clk_period;
+    wait for 10000 * slow_clk_period;
+    
+    tone_sig <= x"01"; 
+    wait for 10000 * slow_clk_period;
       
     wait;
   end process stim_proc; 
-  end behavior; 
+end behavior; 
+  
   
