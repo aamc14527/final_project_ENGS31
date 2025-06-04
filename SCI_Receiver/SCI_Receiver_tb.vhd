@@ -25,8 +25,8 @@ architecture behavior of SCI_Receiver_tb is
     signal byte_out  : std_logic_vector(7 downto 0);
     signal byte_ready: std_logic;
 
-    -- Clock period (10 MHz = 100 ns period)
-    constant CLK_PERIOD : time := 100 ns;
+    -- Clock period (100 MHz = 10 ns period)
+    constant CLK_PERIOD : time := 10 ns;
 
     -- BAUD period based on constant in DUT (320 * 100ns = 32 us)
     constant BAUD_PERIOD : time := 32 us;
