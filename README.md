@@ -48,3 +48,10 @@ Takes 12 bit parallel input and sends the output serially across 12 bits increme
 #### SPI_Transmitter
 inputs: clk (std_logic), Parallel_in (std_logic_vector(11 downto 0)), New_data (std_logic) (will be replaced), MISO (std_logic) <br>
 outputs: MOSI (std_logic), SCLK (std_logic), CS (std_logic), Tx_done (std_logic) <br>
+
+### Lookup Table
+Takes 8 bit std logic vector, provided in hex, and finds the associated m value of that number.
+
+#### m_lookup
+input: tone_sig (std_logic_vector(7 downto 0))
+output: m_value (std_logic_vector(7 downto 0))
