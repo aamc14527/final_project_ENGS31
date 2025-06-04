@@ -1,4 +1,3 @@
-
 ----------------------------------------------------------------------------------
 -- Company: 
 -- Engineer: Andrew Swack
@@ -25,6 +24,7 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -38,17 +38,19 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity DDS_Counter is
     Port (  counter_clk : in std_logic;
             m_value    : in std_logic_vector(7 downto 0);
-            DDS_ROM_ADDR: out std_logic_vector(11 downto 0)
+            DDS_ROM_ADDR: out std_logic_vector(15 downto 0)
     );
 end DDS_Counter;
 
 architecture Behavioral of DDS_Counter is
 
 constant N : integer := 4096; --max value for counter, must be same size as ROM
-signal m : integer := 1; --this is rate determined by tone_sig converted to m_value by a lookup table
-signal ADDR : integer := 0;
+signal m : unsigned(7 downto 0) := "00000001"; --this is rate determined by tone_sig converted to m_value by a lookup table
+signal ADDR : unsigned(15 downto 0) := (others => '1');
 
 begin
+
+m <= unsigned(m_value);
 
 Ncounter : process (counter_clk, ADDR)
 begin
@@ -56,7 +58,7 @@ begin
         ADDR <= ADDR + m;
     end if;
     if(ADDR = N-1) then
-        ADDR <= 0;
+        ADDR <= (others => '0');
     end if;
 
 end process Ncounter;
