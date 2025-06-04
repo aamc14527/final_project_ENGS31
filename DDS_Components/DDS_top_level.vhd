@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: 
--- Engineer: 
+-- Engineer: Andrew Swack
 -- 
 -- Create Date: 06/03/2025 05:21:42 PM
 -- Design Name: 
@@ -8,7 +8,8 @@
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
--- Description: 
+-- Description: Wiring for all the DDS components. Note that the ROM gives a 16 bit signal
+-- so we had to take the 12 msb's to send as the output to the SPI transmitter
 -- 
 -- Dependencies: 
 -- 
@@ -31,7 +32,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity DDS_TopLevel is
 Port ( clk      : in std_logic;
        tone_sig : in std_logic_vector(7 downto 0);
-       sin_sig  : out std_logic_vector(15 downto 0)
+       sin_sig  : out std_logic_vector(11 downto 0)
 );
 end DDS_TopLevel;
 
@@ -43,9 +44,9 @@ architecture Behavioral of DDS_TopLevel is
 component dds_compiler_0 is
   PORT (
     aclk : IN STD_LOGIC;
-    --s_axis_phase_tvalid : IN STD_LOGIC; dont think this is needed
+    s_axis_phase_tvalid : IN STD_LOGIC; --dont think this is needed
     s_axis_phase_tdata : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
-   -- m_axis_data_tvalid : OUT STD_LOGIC; same here
+    m_axis_data_tvalid : OUT STD_LOGIC; --same here
     m_axis_data_tdata : OUT STD_LOGIC_VECTOR(15 DOWNTO 0)
   );
 end component dds_compiler_0;
@@ -59,27 +60,36 @@ end component DDS_Clk_Divider;
 component DDS_Counter is
     Port (  counter_clk : in std_logic;
             m_value    : in std_logic_vector(7 downto 0);
-            DDS_ROM_ADDR: out std_logic_vector(11 downto 0)
+            DDS_ROM_ADDR: out std_logic_vector(15 downto 0)
     );
 end component DDS_Counter;
 
+component m_lookup is
+Port (  tone : in std_logic_vector(7 downto 0);
+        m_val : out std_logic_vector(7 downto 0)
+ );
+end component m_lookup;
 --==============================================================
 --  signals for moving values between components
 --==============================================================
-signal ADDR : std_logic_vector (11 downto 0); --for the address from counter
+signal ADDR : std_logic_vector (15 downto 0); --for the address from counter
 signal slow_clk : std_logic; --for counter clk
-signal m : std_logic_vector(7 downto 0); --m value determined by note signal`
+signal m : std_logic_vector(7 downto 0) := (others => '0'); --m value determined by note signal`
+signal sin_wave : std_logic_vector(15 downto 0); --need to shortn output from ROM to receive a sine wave, do this by passing to a signal then taking 12 lsb's as output
 
 begin
+
+sin_sig <= sin_wave(15 downto 4);
+
 --==============================================================
 --  port maping
 --==============================================================
 DDS_ROM : dds_compiler_0 PORT MAP(
     aclk => slow_clk,
-    s_axis_phase_tvalid => '1', --dont think this is needed
-    s_axis_phase_tdata => "0000" & ADDR,--seems weird, ask Tad
-    m_axis_data_tvalid => open,
-    m_axis_data_tdata => sin_sig
+    s_axis_phase_tvalid => '1', --s_axis_phase_tvalid, dont think this is needed
+    s_axis_phase_tdata => ADDR,--seems weird, ask Tad
+    m_axis_data_tvalid => open,--m_axis_data_tvalid, same here
+    m_axis_data_tdata => sin_wave
 );
 
 DDS_CLK : DDS_Clk_Divider PORT MAP(
@@ -91,5 +101,10 @@ Counter : DDS_Counter PORT MAP(
     counter_clk => slow_clk,
     m_value => m,
     DDS_rom_addr => ADDR
+);
+
+Lookup_table : m_lookup PORT MAP(
+    tone => tone_sig,
+    m_val => m
 );
 end Behavioral;
