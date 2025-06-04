@@ -43,11 +43,11 @@ end DDS_Clk_Divider;
 
 --have a 12 bit ROM (N = 4096) and want a base frequency (F0) less than 10
 --if we choose 16khz for fs we get a base frequency (16000/4096) = 3.90625
---thus the clock divider should be 6250
+--thus the clock divider should be 6250 but divide by two because that is .0625ms up and down
 
 architecture Behavioral of DDS_Clk_Divider is
 
-constant CLK_DIVIDER : integer := 6250;
+constant CLK_DIVIDER : integer := 3125;
 
 
 signal clk_cycle_counter        : unsigned(24 downto 0) := (others => '0');    -- clock divider counter
