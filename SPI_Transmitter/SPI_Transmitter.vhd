@@ -34,7 +34,7 @@ signal bit_cnt_clr 		: std_logic;
 signal bit_cnt_tc		: std_logic;
 
 --sclk counter
-constant SCLK_CNT_MAX 		: integer := 10; --10 mhz main clock, what do we want the output to be (this is for 1 MHz rn)
+constant SCLK_CNT_MAX 		: integer := 100; --100 MHz clock, this is to divide into a 1 MHz clock
 constant SCLK_CNT_TOGGLE	: integer := SCLK_CNT_MAX/2;
 
 signal SCLK_cnt 	: integer range 0 to SCLK_CNT_MAX;
