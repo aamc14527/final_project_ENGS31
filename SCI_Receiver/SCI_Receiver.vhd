@@ -3,21 +3,21 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
-ENTITY SCI_Tx IS 
-PORT ( 	clk			: 	in 	STD_LOGIC;
-		data_in		: 	in 	STD_LOGIC;
+ENTITY SCI_Receiver IS 
+PORT ( 	clk		: 	in 	STD_LOGIC;
+	data_in		: 	in 	STD_LOGIC;
         byte_out	:	out STD_LOGIC_VECTOR(7 downto 0);
         byte_ready	:	out	STD_LOGIC);
 end SCI_Tx;
 
-ARCHITECTURE behavior of SCI_Tx is
+ARCHITECTURE behavior of SCI_Receiver is
 
 --Datapath elements
 type state_type is (sidle, sstart, sread, sstop);
 signal cs, ns : state_type := sidle;
 
 
-constant BAUD_PERIOD : integer := 320; --for a 10 MHz clock, the baud period is 320, 10000000/31250
+constant BAUD_PERIOD 	: integer := 320; --for a 10 MHz clock, the baud period is 320, 10000000/31250
 constant HALF_BAUD 	: integer := BAUD_PERIOD / 2;
 
 signal shift_reg 	: std_logic_vector(9 downto 0) := (others => '1'); --in the example, others are initialized to 1
