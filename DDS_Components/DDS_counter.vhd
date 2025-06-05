@@ -1,3 +1,4 @@
+
 ----------------------------------------------------------------------------------
 -- Company: 
 -- Engineer: Andrew Swack
@@ -57,7 +58,7 @@ begin
     if rising_edge(counter_clk) then
         ADDR <= ADDR + m;
     end if;
-    if(ADDR = N-1) then
+    if(ADDR >= N-1) then
         ADDR <= (others => '0');
     end if;
 
