@@ -15,6 +15,7 @@ port (
 	clk 			: in std_logic;
 	Parallel_in 	: in std_logic_vector(11 downto 0);
 	New_data		: in std_logic;
+	Power           : in std_logic_vector(3 downto 0);
 	--MISO			: in std_logic;
 	MOSI 			: out std_logic;
 	SCLK			: out std_logic;
