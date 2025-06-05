@@ -1,5 +1,6 @@
 
 
+
 library IEEE;
 use IEEE.std_logic_1164.all;
 
@@ -29,7 +30,7 @@ architecture testbench of SCI_Processor_tb is
     signal tone_out 	: 	std_logic_vector(7 downto 0) := (others => '0');
     signal vel_out		: 	std_logic_vector(7 downto 0) := (others => '0');
     
-    constant clk_period : time := 10 ns;  -- Assuming a 100 MHz clock
+    constant clk_period : time := 100 ns;  -- Assuming a 100 MHz clock
     
 BEGIN
     
