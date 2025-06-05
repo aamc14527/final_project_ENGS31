@@ -1,3 +1,4 @@
+
 -- Code your design here
 library IEEE;
 use IEEE.std_logic_1164.all;
@@ -21,7 +22,7 @@ constant BAUD_PERIOD 	: integer := 3200; --for an 100 MHz clock, the baud period
 constant HALF_BAUD 	: integer := BAUD_PERIOD / 2;
 
 signal shift_reg 	: std_logic_vector(9 downto 0) := (others => '1'); --in the example, others are initialized to 1
-signal baud_cnt : unsigned(8 downto 0) := (others => '0'); --9 bits for 320, subject to change
+signal baud_cnt : unsigned(11 downto 0) := (others => '0'); --9 bits for 320, subject to change
 signal bit_cnt 	: unsigned(3 downto 0) := (others => '0'); --4 bits to represent 10
 
 signal data_ready : std_logic := '0';
@@ -73,10 +74,10 @@ baudRateClock : process(clk)
 BEGIN
 	if rising_edge(clk) then 
       if cs = sidle and data_in = '0' then --starts the baud counter
-          baud_cnt <= to_unsigned(HALF_BAUD-1, 9); --setting the baud cnt to HALF_BAUD
+          baud_cnt <= to_unsigned(HALF_BAUD-1, 12); --setting the baud cnt to HALF_BAUD
           baud_tc <= '0';
       elsif baud_cnt = 0 then 
-          baud_cnt <= to_unsigned(BAUD_PERIOD-1, 9); --non midpoint
+          baud_cnt <= to_unsigned(BAUD_PERIOD-1, 12); --non midpoint
           baud_tc <= '1';
       else 
           baud_cnt <= baud_cnt - 1;
