@@ -7,8 +7,9 @@ use IEEE.numeric_std.all;
 entity SPI_Tx is
 port(
     	clk		: in  std_logic;
-	Parallel_in	: in  std_logic_vector(11 downto 0);
+	   Parallel_in	: in  std_logic_vector(11 downto 0);
     	New_data	: in  std_logic;
+    	Power      : in std_logic_vector(3 downto 0);
     	--MISO		: in  std_logic; --not used, probably redundant in this implementation
 	    MOSI		: out std_logic;
     	SCLK        	: out std_logic;
@@ -67,7 +68,7 @@ begin
 		when idle => 
 			bit_cnt_clr <= '1';
 			SCLK_cnt_clr <= '1';
-			if New_data = '1' then 
+			if New_data = '1' and Power = "1001" then 
 				ns <= shifting;
 			end if;
 			
