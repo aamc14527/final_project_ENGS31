@@ -71,6 +71,7 @@ architecture behavioral_architecture of top_shell is
             clk         : in  std_logic;
             Parallel_in : in  std_logic_vector(11 downto 0);
             New_data    : in  std_logic;
+            Power       : in std_logic_vector(3 downto 0);
             --MISO        : in  std_logic;
             MOSI        : out std_logic;
             SCLK        : out std_logic;
@@ -134,6 +135,7 @@ begin
             clk         => clk,
             Parallel_in => sine_wave,
             New_data    => data_valid_sig,              -- trigger from DDS
+            Power       => power_sig,
             --MISO        => MISO,
             MOSI        => MOSI,
             SCLK        => SCLK,
