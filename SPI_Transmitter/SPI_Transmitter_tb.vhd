@@ -1,4 +1,5 @@
 
+
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 USE IEEE.NUMERIC_STD.ALL;
@@ -14,7 +15,7 @@ port (
 	clk 			: in std_logic;
 	Parallel_in 	: in std_logic_vector(11 downto 0);
 	New_data		: in std_logic;
-	MISO			: in std_logic;
+	--MISO			: in std_logic;
 	MOSI 			: out std_logic;
 	SCLK			: out std_logic;
 	CS 				: out std_logic;
@@ -25,7 +26,7 @@ end component;
 signal clk 			: std_logic := '0';
 signal Parallel_in 	: std_logic_vector(11 downto 0) := (others => '0');
 signal New_data 	: std_logic := '0';
-signal MISO 		: std_logic := '0';
+--signal MISO 		: std_logic := '0';
 
 signal MOSI			: std_logic;
 signal SCLK			: std_logic;
@@ -40,7 +41,7 @@ uut: SPI_Tx port map (
 	clk 		=> clk, 
 	Parallel_in => Parallel_in, 
 	New_data 	=> New_data,
-	MISO 		=> MISO,
+	--MISO 		=> MISO,
 	MOSI 		=> MOSI,
 	SCLK		=> SCLK,
 	CS 			=> CS,
