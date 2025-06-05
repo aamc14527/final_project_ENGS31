@@ -1,4 +1,5 @@
 
+
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
@@ -8,11 +9,11 @@ port(
     	clk		: in  std_logic;
 	Parallel_in	: in  std_logic_vector(11 downto 0);
     	New_data	: in  std_logic;
-    	MISO		: in  std_logic; --not used, probably redundant in this implementation
-	MOSI		: out std_logic;
+    	--MISO		: in  std_logic; --not used, probably redundant in this implementation
+	    MOSI		: out std_logic;
     	SCLK        	: out std_logic;
     	CS		: out std_logic;
-	Tx_done     	: out std_logic   
+	    Tx_done     	: out std_logic   
 	);        
 end SPI_Tx;
 
