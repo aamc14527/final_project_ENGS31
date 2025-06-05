@@ -1,3 +1,4 @@
+
 ----------------------------------------------------------------------------------
 -- Company: 
 -- Engineer: Asa Chard
@@ -100,3 +101,5 @@ begin
 			m_val <= "00000000";
     end case;
 end process;
+
+end behavioral;
