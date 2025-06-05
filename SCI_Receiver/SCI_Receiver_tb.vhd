@@ -1,3 +1,4 @@
+
 -- Code your testbench here
 library IEEE;
 use IEEE.std_logic_1164.all;
@@ -28,7 +29,7 @@ architecture behavior of SCI_Receiver_tb is
     -- Clock period (100 MHz = 10 ns period)
     constant CLK_PERIOD : time := 10 ns;
 
-    -- BAUD period based on constant in DUT (320 * 100ns = 32 us)
+    -- BAUD period based on constant in DUT (3200 * 10ns = 32 us)
     constant BAUD_PERIOD : time := 32 us;
 
 begin
