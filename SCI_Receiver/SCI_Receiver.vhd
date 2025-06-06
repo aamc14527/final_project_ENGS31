@@ -8,7 +8,9 @@ ENTITY SCI_Receiver IS
 PORT ( 	clk		: 	in 	STD_LOGIC;
 	data_in		: 	in 	STD_LOGIC;
         byte_out	:	out STD_LOGIC_VECTOR(7 downto 0);
-        byte_ready	:	out	STD_LOGIC);
+        byte_ready	:	out	STD_LOGIC;
+        baud_term   : out std_logic -- for debugging
+     );
 end SCI_Receiver;
 
 ARCHITECTURE behavior of SCI_Receiver is
@@ -104,5 +106,6 @@ BEGIN
 end process receiver;
 
 byte_ready <= data_ready;
+baud_term <= baud_tc;
 end behavior;
            
