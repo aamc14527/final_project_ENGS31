@@ -34,7 +34,7 @@ entity DDS_TopLevel is
 Port ( clk      : in std_logic;
        tone_sig : in std_logic_vector(7 downto 0);
        sin_sig  : out std_logic_vector(11 downto 0);
-       data_valid : out std_logic
+       data_valid : out std_logic --wired to slow clock
 );
 end DDS_TopLevel;
 
@@ -82,6 +82,7 @@ signal sin_wave : std_logic_vector(15 downto 0); --need to shortn output from RO
 begin
 
 sin_sig <= sin_wave(15 downto 4); --take 12 msb's outputed by ROM
+data_valid <= slow_clk;
 
 --==============================================================
 --  port maping
@@ -90,7 +91,7 @@ DDS_ROM : dds_compiler_0 PORT MAP(
     aclk => slow_clk,
     s_axis_phase_tvalid => '1', --s_axis_phase_tvalid, dont think this is needed
     s_axis_phase_tdata => ADDR,--cannot stop it from being 16 bit signal. converted to 12 bits by sin_wave signal
-    m_axis_data_tvalid => data_valid,--m_axis_data_tvalid, same here
+    m_axis_data_tvalid => open,--m_axis_data_tvalid, same here
     m_axis_data_tdata => sin_wave
 );
 
