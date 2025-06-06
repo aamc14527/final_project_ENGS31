@@ -15,14 +15,19 @@ port(
     	SCLK        	: out std_logic;
     	CS		: out std_logic;
 	    Tx_done     	: out std_logic   
+	    --note_on    : out std_logic --for debugging, turns right most light on when a note is presssed
 	);        
 end SPI_Tx;
 
 architecture behavior of SPI_Tx is
 
 --FSM states
-type state_type is (idle, shifting, done);
-signal cst, ns	: state_type := idle;
+type state_type is (idle, shifting, done, wait_low, wait_high, pulse);
+signal cst, ns : state_type := idle;
+
+type states is (wait_low, wait_high, pulse);
+signal current_state, next_state : states := (wait_high);
+
 
 --Shift register
 signal SPI_reg 	: std_logic_vector(11 downto 0) := (others => '0');
@@ -43,7 +48,17 @@ signal SCLK_cnt 	: integer range 0 to SCLK_CNT_MAX;
 signal SCLK_cnt_en	: std_logic;
 signal SCLK_cnt_clr : std_logic;
 
+signal new_data_sig : std_logic := '0';
+
+
 begin 
+--note_playing_light : process(power)
+--begin
+--    note_on <= '0';
+--    if(power = "1001") then
+--        note_on <= '1';
+--    end if;
+--end process note_playing_light;
 
 stateUpdate	: process(clk)
 begin
@@ -68,7 +83,7 @@ begin
 		when idle => 
 			bit_cnt_clr <= '1';
 			SCLK_cnt_clr <= '1';
-			if New_data = '1' and Power = "1001" then 
+			if New_data = '1' then 
 				ns <= shifting;
 			end if;
 			
@@ -93,7 +108,7 @@ end process nextStateLogic;
 shift_reg : process(clk) 
 begin
 	if rising_edge(clk) then 
-		if New_data = '1' then 
+		if new_data_sig = '1' then 
 			SPI_reg <= Parallel_in;
 		elsif shift_en = '1' then 
 			SPI_reg <= SPI_reg(10 downto 0) & '0';
@@ -150,6 +165,36 @@ begin
 	end if;
 	
 end process counters;
+
+stateUpdate2 : process(clk)
+begin
+    if rising_edge(clk) then
+        current_state <= next_state;
+    end if;
+end process stateUpdate2;
+
+-- STATES: wait_low, pulse, wait high
+process (current_state, New_data)
+begin
+        new_data_sig <= '0';
+        next_state <= current_state;
+        
+        case current_state is
+
+            when wait_low =>
+                if New_data = '1' then 
+                    next_state <= pulse;
+                end if;
+            when pulse => 
+                new_data_sig <= '1';
+                next_state <= wait_high;
+            when wait_high => 
+                if New_data = '0' then 
+                    next_state <= wait_low;
+                end if;
+        end case; 
+end process;
+
 MOSI <= SPI_reg(11);
 
 end behavior;
