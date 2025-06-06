@@ -14,8 +14,9 @@ port(
 	    MOSI		: out std_logic;
     	SCLK        	: out std_logic;
     	CS		: out std_logic;
-	    Tx_done     	: out std_logic   
+	    Tx_done     	: out std_logic 
 	    --note_on    : out std_logic --for debugging, turns right most light on when a note is presssed
+
 	);        
 end SPI_Tx;
 
@@ -30,11 +31,11 @@ signal current_state, next_state : states := (wait_high);
 
 
 --Shift register
-signal SPI_reg 	: std_logic_vector(11 downto 0) := (others => '0');
+signal SPI_reg 	: std_logic_vector(15 downto 0) := (others => '0');
 signal shift_en	: std_logic;
 
 --bit counter
-constant BIT_CNT_MAX	: integer := 12;
+constant BIT_CNT_MAX	: integer := 16;
 signal bit_cnt 			: integer range 0 to BIT_CNT_MAX := 0;
 signal bit_cnt_en 		: std_logic;
 signal bit_cnt_clr 		: std_logic;
@@ -52,13 +53,7 @@ signal new_data_sig : std_logic := '0';
 
 
 begin 
---note_playing_light : process(power)
---begin
---    note_on <= '0';
---    if(power = "1001") then
---        note_on <= '1';
---    end if;
---end process note_playing_light;
+
 
 stateUpdate	: process(clk)
 begin
@@ -69,7 +64,7 @@ end process stateUpdate;
 
 
 --somehow going to need logic to interpret the power signal 
-nextStateLogic : process(cst, New_data, bit_cnt_tc)
+nextStateLogic : process(cst, new_data_sig, bit_cnt_tc)
 begin
 	--defaults
 	ns <= cst;
@@ -83,7 +78,7 @@ begin
 		when idle => 
 			bit_cnt_clr <= '1';
 			SCLK_cnt_clr <= '1';
-			if New_data = '1' then 
+			if new_data_sig = '1' then 
 				ns <= shifting;
 			end if;
 			
@@ -109,9 +104,9 @@ shift_reg : process(clk)
 begin
 	if rising_edge(clk) then 
 		if new_data_sig = '1' then 
-			SPI_reg <= Parallel_in;
+			SPI_reg <= "0000" & Parallel_in;
 		elsif shift_en = '1' then 
-			SPI_reg <= SPI_reg(10 downto 0) & '0';
+			SPI_reg <= SPI_reg(14 downto 0) & '0';
 		end if;
 	end if;
 end process shift_reg;
@@ -194,7 +189,10 @@ begin
                 end if;
         end case; 
 end process;
-
-MOSI <= SPI_reg(11);
-
+power_proc : process(Power)
+begin   
+    if Power = "1001" then 
+        MOSI <= SPI_reg(15);
+    end if;
+end process power_proc;
 end behavior;
