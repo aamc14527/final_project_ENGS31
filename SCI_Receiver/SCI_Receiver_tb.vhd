@@ -30,7 +30,7 @@ architecture behavior of SCI_Receiver_tb is
     constant CLK_PERIOD : time := 10 ns;
 
     -- BAUD period based on constant in DUT (3200 * 10ns = 32 us)
-    constant BAUD_PERIOD : time := 32 us;
+    constant BAUD_PERIOD : time := 19.3 us;
 
 begin
 
