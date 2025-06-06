@@ -34,7 +34,23 @@ architecture behavior of top_shell_tb is
             --MISO        : in std_logic;
             MOSI        : out std_logic;
             SCLK        : out std_logic;
-            CS          : out std_logic
+            CS          : out std_logic;
+            light_16    : out std_logic;
+            light_15    : out std_logic;
+            light_14    : out std_logic;
+            light_13    : out std_logic;
+            light_12    : out std_logic; 
+            light_11    : out std_logic; 
+            light_10    : out std_logic; 
+            light_9    : out std_logic; 
+            light_8   : out std_logic;
+            light_7   : out std_logic;
+            light_6   : out std_logic;
+            light_5   : out std_logic;
+            light_4   : out std_logic;
+            light_3   : out std_logic;
+            light_2   : out std_logic;
+            light_1   : out std_logic  
         );
     end component;
 
@@ -45,7 +61,24 @@ architecture behavior of top_shell_tb is
     signal MOSI        : std_logic;
     signal SCLK        : std_logic;
     signal CS          : std_logic;
-
+    --signal light_on    : std_logic;
+    signal light_16    : std_logic;
+    signal light_15    : std_logic;
+    signal light_14    : std_logic;
+    signal light_13    : std_logic;
+    signal light_12    : std_logic; 
+    signal light_11    : std_logic; 
+    signal light_10    : std_logic; 
+    signal light_9    : std_logic; 
+    signal light_8   : std_logic;
+    signal light_7   : std_logic;
+    signal light_6   : std_logic;
+    signal light_5   : std_logic;
+    signal light_4   : std_logic;
+    signal light_3   : std_logic;
+    signal light_2   : std_logic;
+    signal light_1   : std_logic; 
+            
     constant clk_period : time := 10 ns;
     
     constant BAUD_PERIOD : time := 32 us;
@@ -63,7 +96,24 @@ begin
             --MISO        => MISO,
             MOSI        => MOSI,
             SCLK        => SCLK,
-            CS          => CS
+            CS          => CS,
+            light_16    => light_16,
+        light_15    => light_15,
+        light_14    => light_14,
+        light_13    => light_13,
+        light_12    => light_12,
+        light_11    => light_11,
+        light_10    => light_10,
+        light_9     => light_9,
+        light_8     => light_8,
+        light_7     => light_7,
+        light_6     => light_6,
+        light_5     => light_5,
+        light_4     => light_4,
+        light_3     => light_3,
+        light_2     => light_2,
+        light_1     => light_1
+
         );
 
     -- Clock process
