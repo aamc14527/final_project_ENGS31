@@ -45,7 +45,9 @@ entity top_shell is
         light_4   : out std_logic; --3 downto 1 is channel
         light_3   : out std_logic;
         light_2   : out std_logic;
-        light_1   : out std_logic     
+        light_1   : out std_logic;   
+        Baud_Term_Count : out std_logic; 
+        ps : out std_logic_vector(3 downto 0) -- for debug
     );
 end top_shell;
 
@@ -57,7 +59,8 @@ architecture behavioral_architecture of top_shell is
             clk         :   in  std_logic;
             data_in		: 	in 	STD_LOGIC;
             byte_out	:	out STD_LOGIC_VECTOR(7 downto 0);
-            byte_ready	:	out	STD_LOGIC
+            byte_ready	:	out	STD_LOGIC;
+            baud_term   :   out std_logic   --fpr debugging
         );
     end component;
 
@@ -97,6 +100,15 @@ architecture behavioral_architecture of top_shell is
 
         );
     end component;
+    
+    component system_clock_generator is
+    --generic (CLOCK_DIVIDER_RATIO : integer);
+	port (
+        input_clk_port		: in std_logic;
+        system_clk_port	    : out std_logic;
+		fwd_clk_port		: out std_logic);
+    end component;
+
 
     -- INTERNAL SIGNALS
     signal load_in       : std_logic := '1';  -- simplified always-high (optional control logic)
@@ -119,22 +131,6 @@ begin
 
 lights_proc : process(clk, tone_byte, power_sig, midi_channel) 
 begin
-    
-    
-    light_14    <= '0';
-    light_13    <= '0';
-    light_12    <= '0';
-    light_11    <= '0';
-    light_10    <= '0';
-    light_9     <= '0';
-    light_8     <= '0';
-    light_7     <= '0';
-    light_6     <= '0';
-    light_5     <= '0';
-    light_4     <= '0';
-    light_3     <= '0';
-    light_2     <= '0';
-    light_1     <= '0';
     if tone_byte(7) = '1' then --tone bytes do indicate the tone of the note
         light_16 <= '1';
     else light_16    <= '0';
@@ -145,48 +141,63 @@ begin
     end if;
     if tone_byte(5) = '1' then
         light_14 <= '1';
+    else light_14    <= '0';
     end if;
     if tone_byte(4) = '1' then
         light_13 <= '1';
+    else light_13    <= '0';
     end if;
     if tone_byte(3) = '1' then
         light_12 <= '1';
+    else light_12    <= '0';
     end if;
     if tone_byte(2) = '1' then
         light_11 <= '1';
+    else light_11    <= '0';
     end if;
     if tone_byte(1) = '1' then
         light_10 <= '1';
+    else light_10    <= '0';
     end if;
     if tone_byte(0) = '1' then
         light_9 <= '1';
+    else light_9    <= '0';
     end if;
     if power_sig(3) = '1' then 
         light_8 <= '1';
+    else light_8    <= '0';
     end if;
     if power_sig(2) = '1' then 
         light_7 <= '1';
+    else light_7    <= '0';
     end if;
     if power_sig(1) = '1' then 
         light_6 <= '1';
+    else light_6    <= '0';
     end if;
     if power_sig(0) = '1' then 
         light_5 <= '1';
+    else light_5    <= '0';
     end if;
     if midi_channel(3) = '1' then 
         light_4 <= '1';
+    else light_4    <= '0';
     end if;
     if midi_channel(2) = '1' then --always high when key is pressed
         light_3 <= '1';
+    else light_3    <= '0';
     end if;
     if midi_channel(1) = '1' then 
         light_2 <= '1';
+    else light_2    <= '0';
     end if;
     if midi_channel(0) = '1' then 
         light_1 <= '1';
+    else light_1    <= '0';
     end if;
 end process; 
 
+ps <= power_sig;
 
     -- Connect SCI_receiver
     SCI_rec_tl: SCI_receiver
@@ -194,7 +205,8 @@ end process;
             clk         => clk,
             Data_in     => Data_in,   -- feed directly from input
             byte_out    => SCI_Byte,
-            byte_ready  => done_in
+            byte_ready  => done_in,
+            baud_term   => Baud_Term_Count
         );
 
     -- Connect SCI_processor
@@ -227,11 +239,18 @@ end process;
             Power       => power_sig,
             --MISO        => MISO,
             MOSI        => MOSI,
-            SCLK        => SCLK,
+            SCLK        => open, --may need to change back to sclk
             CS          => CS,
             Tx_done     => spi_done         --not useful, will keep because further development of this project could find this helpful
             --note_on     => light_on
         );
+
+    sclk_tl: system_clock_generator
+        port map (
+            input_clk_port	=> clk,	
+            system_clk_port	=>  SCLK,
+            fwd_clk_port	=> open	
+            );
 
 end behavioral_architecture;
 
