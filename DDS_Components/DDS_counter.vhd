@@ -57,10 +57,11 @@ Ncounter : process (counter_clk, ADDR)
 begin
     if rising_edge(counter_clk) then
         ADDR <= ADDR + m;
+        if(ADDR >= N-1) then
+            ADDR <= (others => '0');
+        end if;
     end if;
-    if(ADDR >= N-1) then
-        ADDR <= (others => '0');
-    end if;
+    
 
 end process Ncounter;
 
