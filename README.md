@@ -1,4 +1,6 @@
 ## Final Project
+## Overall Description
+The purpose of this project was to take input from a MIDI and convert the information, which was translated serially (UART Protocol), to byte-long signals, which we could use to determine the output. For this we needed a receiver, a processor, a sine wave to measure the frequency of the given tone byte, and a transmitter, which would send bits out serially to the speaker.
 
 ### SCI Receiver
 Takes input from the MIDI (3 byte signals, each led by a start bit (LOW) and a stop bit (HIGH). Takes this input and sends 8 bits of information along with a data ready signal as an output. byte_ready flag is only high for one clock cycle.
