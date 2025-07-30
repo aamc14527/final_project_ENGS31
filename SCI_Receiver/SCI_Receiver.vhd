@@ -1,4 +1,23 @@
 
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: Asa Chard
+-- 
+-- Create Date: 06/02/2025 08:40:28 PM
+-- Design Name: SCI_Receiver
+-- Module Name: 
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: Receives uart transmission and indicates when the byte is ready to be sent to the processor
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
 -- Code your design here
 library IEEE;
 use IEEE.std_logic_1164.all;
