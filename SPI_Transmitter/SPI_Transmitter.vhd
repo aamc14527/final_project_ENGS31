@@ -1,4 +1,23 @@
 
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: Asa Chard
+-- 
+-- Create Date: 06/02/2025 08:40:28 PM
+-- Design Name: SPI_Transmitter
+-- Module Name: SPI_Transmitter
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: transmits serial data after reading sine wave
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
 
 library IEEE;
 use IEEE.std_logic_1164.all;
