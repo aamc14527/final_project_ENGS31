@@ -1,4 +1,23 @@
 
+----------------------------------------------------------------------------------
+-- Company: 
+-- Engineer: Asa Chard
+-- 
+-- Create Date: 06/02/2025 08:40:28 PM
+-- Design Name: SPI_Transmitter_tb
+-- Module Name: 
+-- Project Name: 
+-- Target Devices: 
+-- Tool Versions: 
+-- Description: testbench for the transmitter
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
+----------------------------------------------------------------------------------
 
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
